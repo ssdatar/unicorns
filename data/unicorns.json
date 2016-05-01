@@ -1,0 +1,22 @@
+{
+ "name": "countries",
+ "children": [
+        {"name": "USA", "size": 92},
+        {"name": "China", "size": 25},
+        {"name": "India", "size": 7},
+        {"name": "UK", "size": 7},
+        {"name": "Israel", "size": 2},
+        {"name": "Germany", "size": 2},
+        {"name": "Sweden", "size": 2},
+        {"name": "S Korea", "size": 2},
+        {"name": "Singapore", "size": 2},
+        {"name": "Canada", "size": 2},
+        {"name": "Argentina", "size": 1},
+        {"name": "Netherlands", "size": 1},
+        {"name": "Thailand", "size": 1},
+        {"name": "France", "size": 1},
+        {"name": "Scotland", "size": 1},
+        {"name": "Czech Rep.", "size": 1},
+        {"name": "Luxembourg", "size": 1}
+       ]
+}
