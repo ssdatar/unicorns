@@ -60,6 +60,19 @@ var scrollVis = function() {
   .scale(xIndScale)
   .orient("bottom");
 
+  /* SCALES AND AXIS FOR FASTEST CHART */
+
+  var xFastScale = d3.scale.linear()
+  .range([10, width - 50]);
+
+  var yIndScale = d3.scale.ordinal()
+  .rangeRoundBands([0, height - 50], 0.1, 0.1);
+
+  var xFastAxis = d3.svg.axis()
+  .scale(xFastScale)
+  .orient("bottom");
+
+
   // When scrolling to a new section
   // the activation function for that
   // section is called.
@@ -142,11 +155,17 @@ var scrollVis = function() {
         return d.values.length;
       });
 
+      // Set domain for fast bar chart
+      xFastScale.domain([0, 2.23]);
+      //yFastScale.domain[]
+
       // Set domain for country bar chart
       xIndScale.domain([0, xIndMax]);
       yIndScale.domain(asiaInd.map(function (d) {
         return d.key;
       }));
+
+
 
       setupVis(asiaInd, top10Data, asiaData);
       setupSections();
@@ -248,6 +267,7 @@ var scrollVis = function() {
     // Make the rectangles
     box.append("rect")
     .attr("class", "tree")
+    .attr("id", function (d) { return d.name; })
     .style("fill", function(d, i) { 
       return color(d.name); })
     .style("opacity", function (d, i) {
@@ -329,8 +349,8 @@ var scrollVis = function() {
     .attr("class", "top")
     .attr("cx", function (d) { return +d.cx; })
     .attr("cy", function (d) { return +d.cy; })
-    .attr("r", 0)
-    .attr("fill", "darkred");
+    .attr("r", 0);
+    //.attr("fill", "darkred");
 
     circles.append("text")
     .attr("class", "top-text")
@@ -396,6 +416,44 @@ var scrollVis = function() {
   /*------------------------------------------------------------------*/
 
     /*******
+    /***** START OF CHART FOR FASTEST CHART
+    ******/
+
+    d3.csv("data/data.csv", function (error, csv) {
+      if (error) throw error;
+
+      var asiaList = ["India", "China", "Israel", "Singapore", "South Korea"];
+
+      csv = csv.slice(0,10);
+      console.log(csv)
+
+      fast = g.selectAll(".fast")
+      .data(csv).enter()
+      .append("g");
+
+      fast.append("rect")
+      .attr("class", "fast")
+      //.attr("id", function (d) { return d.country; })
+      .attr("x", 10)
+      .attr("y", function (d, i) { return i * 60; })
+      .attr("height", 40)
+      .attr("width", 0)
+      .attr("fill", "steelblue");
+
+      fast.append("text")
+      .attr("class", "fast-text")
+      .attr("x", function (d) { return xFastScale(d.year_uni); })
+      .attr("y", function (d, i) { return i * 60 + 25; })
+      .attr("font-size", "1.3em")
+      .attr("text-anchor", "end")
+      .attr("fill", "white")
+      .attr("opacity", 0)
+      .text(function(d) {return d.company; });
+    });
+
+  /*------------------------------------------------------------------*/
+
+    /*******
     /***** START OF CHART FOR ASIAN UNICORN BY INDUSTRY
     ******/
 
@@ -452,9 +510,9 @@ var scrollVis = function() {
     activateFunctions[2] = showTree;
     activateFunctions[3] = showTop;
     activateFunctions[4] = showCountryColor;
-    activateFunctions[5] = showBar;
-    // activateFunctions[6] = showHistAll;
-    // activateFunctions[7] = showCough;
+    activateFunctions[5] = showFast;
+    activateFunctions[6] = showFastColor;
+    activateFunctions[7] = showBar;
     // activateFunctions[8] = showHistAll;
 
     // updateFunctions are called while
@@ -557,6 +615,16 @@ var scrollVis = function() {
     .duration(600)
     .attr("opacity", 0);
 
+    g.selectAll(".fast")
+    .transition()
+    .duration(600)
+    .attr("width", 0);
+
+    g.selectAll(".fast-text")
+    .transition()
+    .duration(600)
+    .attr("opacity", 0);
+
   }
 
   /**
@@ -634,6 +702,16 @@ var scrollVis = function() {
     .transition()
     .duration(600)
     .attr("opacity", 0);
+
+    g.selectAll(".fast")
+    .transition()
+    .duration(600)
+    .attr("width", 0);
+
+    g.selectAll(".fast-text")
+    .transition()
+    .duration(600)
+    .attr("opacity", 0);
   }
 
   function showTree() {
@@ -705,6 +783,16 @@ var scrollVis = function() {
     .transition()
     .duration(600)
     .attr("opacity", 0);
+
+    g.selectAll(".fast")
+    .transition()
+    .duration(600)
+    .attr("width", 0);
+
+    g.selectAll(".fast-text")
+    .transition()
+    .duration(600)
+    .attr("opacity", 0);
   }
 
   function showTop() {
@@ -735,8 +823,8 @@ var scrollVis = function() {
     g.selectAll(".top")
     .transition()
     .duration(600)
-    .attr("fill", "darkred")
-    .attr("r", function (d) { return circleScale(d.valuation); });
+    .attr("r", function (d) { return circleScale(d.valuation); })
+    .attr("fill", "darkred");
 
     g.selectAll(".top-text")
     .transition()
@@ -763,13 +851,29 @@ var scrollVis = function() {
     .transition()
     .duration(600)
     .attr("opacity", 0);
+
+    g.selectAll(".fast")
+    .transition()
+    .duration(600)
+    .attr("width", 0);
+
+    g.selectAll(".fast-text")
+    .transition()
+    .duration(600)
+    .attr("opacity", 0);
   }
 
   function showCountryColor() {
     g.selectAll(".top")
     .transition()
     .duration(600)
-    .attr("fill", function (d) { return countryColor(d.country); });
+    .attr("r", function (d) { return circleScale(d.valuation); })
+    .attr("fill", function (d) { return countryColor(d.country); })
+
+    g.selectAll(".top-text")
+    .transition()
+    .duration(600)
+    .attr("opacity", 1);
 
     g.selectAll(".legend")
     .transition()
@@ -792,6 +896,199 @@ var scrollVis = function() {
     .transition()
     .duration(600)
     .attr("opacity", 0);
+
+    g.select(".x.axis")
+    .style("opacity", 0);
+
+    g.selectAll(".fast")
+    .transition()
+    .duration(600)
+    .attr("width", 0);
+
+    g.selectAll(".fast-text")
+    .transition()
+    .duration(600)
+    .attr("opacity", 0);
+  }
+
+  function showFast() {
+    hideAxis();
+    showAxis(xFastAxis);
+    
+    g.selectAll(".count-title")
+    .transition()
+    .duration(600)
+    .attr("opacity", 0);
+
+    g.selectAll(".value-title")
+    .transition()
+    .duration(600)
+    .attr("opacity", 0);
+
+    g.selectAll(".value-sub")
+    .transition()
+    .duration(600)
+    .attr("opacity", 0);
+
+    g.selectAll(".top")
+    .transition()
+    .duration(600)
+    .attr('width', 0);
+
+    g.selectAll(".tree")
+    .transition()
+    .duration(600)
+    .attr("width", 0)
+    .attr("height", 0);
+
+    g.selectAll(".tree-text")
+    .transition()
+    .duration(600)
+    .attr("opacity", 0);
+
+    g.selectAll(".tree-num")
+    .transition()
+    .duration(600)
+    .attr("opacity", 0);
+
+    g.selectAll(".top")
+    .transition()
+    .duration(600)
+    .attr("r", 0);
+
+    g.selectAll(".top-text")
+    .transition()
+    .duration(600)
+    .attr("opacity", 0);
+
+    g.selectAll(".legend")
+    .transition()
+    .duration(600)
+    .attr("width", 0)
+    .attr("height", 0);
+
+    g.selectAll(".legend-text")
+    .transition()
+    .duration(600)
+    .attr("opacity", 0);
+
+    g.selectAll(".bar")
+    .transition()
+    .duration(600)
+    .attr("width", 0);
+
+    g.selectAll(".bar-text")
+    .transition()
+    .duration(600)
+    .attr("opacity", 0);
+
+    g.select("#x-label")
+    .attr("dx", ".6em")
+    .attr("dy", "3em")
+    .transition()
+    .duration(600)
+    .text("Number of years");
+
+    g.selectAll(".fast")
+    .transition()
+    .duration(600)
+    .attr("id", function (d) { return null; })
+    .attr("width", function (d) { return xFastScale(+d.year_uni); });
+
+    g.selectAll(".fast-text")
+    .transition()
+    .duration(600)
+    .attr("opacity", 1);
+  }
+
+  function showFastColor() {
+    hideAxis();
+    showAxis(xFastAxis);
+    
+    g.selectAll(".count-title")
+    .transition()
+    .duration(600)
+    .attr("opacity", 0);
+
+    g.selectAll(".value-title")
+    .transition()
+    .duration(600)
+    .attr("opacity", 0);
+
+    g.selectAll(".value-sub")
+    .transition()
+    .duration(600)
+    .attr("opacity", 0);
+
+    g.selectAll(".top")
+    .transition()
+    .duration(600)
+    .attr('width', 0);
+
+    g.selectAll(".tree")
+    .transition()
+    .duration(600)
+    .attr("width", 0)
+    .attr("height", 0);
+
+    g.selectAll(".tree-text")
+    .transition()
+    .duration(600)
+    .attr("opacity", 0);
+
+    g.selectAll(".tree-num")
+    .transition()
+    .duration(600)
+    .attr("opacity", 0);
+
+    g.selectAll(".top")
+    .transition()
+    .duration(600)
+    .attr("r", 0);
+
+    g.selectAll(".top-text")
+    .transition()
+    .duration(600)
+    .attr("opacity", 0);
+
+    g.selectAll(".legend")
+    .transition()
+    .duration(600)
+    .attr("width", 0)
+    .attr("height", 0);
+
+    g.selectAll(".legend-text")
+    .transition()
+    .duration(600)
+    .attr("opacity", 0);
+
+    g.selectAll(".bar")
+    .transition()
+    .duration(600)
+    .attr("width", 0);
+
+    g.selectAll(".bar-text")
+    .transition()
+    .duration(600)
+    .attr("opacity", 0);
+
+    g.select("#x-label")
+    .attr("dx", ".6em")
+    .attr("dy", "3em")
+    .transition()
+    .duration(600)
+    .text("Number of years");
+
+    g.selectAll(".fast")
+    .transition()
+    .duration(600)
+    .attr("id", function (d) { return d.country.replace(" ", "-"); })
+    .attr("width", function (d) { return xFastScale(+d.year_uni); });
+
+    g.selectAll(".fast-text")
+    .transition()
+    .duration(600)
+    .attr("opacity", 1);
   }
 
   function showBar() {
@@ -863,6 +1160,23 @@ var scrollVis = function() {
     .transition()
     .duration(600)
     .attr("opacity", 1);
+
+     g.select("#x-label")
+    .attr("dx", ".6em")
+    .attr("dy", "3em")
+    .transition()
+    .duration(600)
+    .text("Number of companies");
+
+    g.selectAll(".fast")
+    .transition()
+    .duration(600)
+    .attr("width", 0);
+
+    g.selectAll(".fast-text")
+    .transition()
+    .duration(600)
+    .attr("opacity", 0);
   }
 
   

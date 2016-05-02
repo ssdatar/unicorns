@@ -77,6 +77,10 @@ h1 {
   font-weight: bold;
 }
 
+rect.legend{
+  fill-opacity: .7;
+}
+
 text.tree-num {
   fill: #3f3f3f;
 }
@@ -105,4 +109,18 @@ text.bar-text {
 
 #x-label {
   font-size: 1.4em;
+}
+
+rect.fast {
+  fill: steelblue;
+}
+
+rect#China {
+  fill: #cc0000;
+  fill-opacity: .7;
+}
+
+rect#United-States{
+  fill: #002868;
+  fill-opacity: .7;
 }
