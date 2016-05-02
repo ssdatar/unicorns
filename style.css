@@ -123,4 +123,5 @@ rect#China {
 rect#United-States{
   fill: #002868;
   fill-opacity: .7;
+  opacity: .1;
 }
