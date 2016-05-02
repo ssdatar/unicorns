@@ -183,7 +183,7 @@ var scrollVis = function() {
     // axis
     g.append("g")
       .attr("class", "x axis")
-      .attr("transform", "translate(0," + (height - 45)  + ")")
+      .attr("transform", "translate(10," + (height - 45)  + ")")
       .call(xIndAxis);
     g.select(".x.axis").style("opacity", 0);
 
@@ -191,7 +191,7 @@ var scrollVis = function() {
     .append("text")
     .attr("id", "x-label")
     .attr("x", width - 190)
-    .attr("y", -20)
+    .attr("y", -10)
     .text("Number of companies");
 
     /*******
@@ -434,7 +434,7 @@ var scrollVis = function() {
       fast.append("rect")
       .attr("class", "fast")
       //.attr("id", function (d) { return d.country; })
-      .attr("x", 10)
+      .attr("x", 20)
       .attr("y", function (d, i) { return i * 60; })
       .attr("height", 40)
       .attr("width", 0)
@@ -449,6 +449,16 @@ var scrollVis = function() {
       .attr("fill", "white")
       .attr("opacity", 0)
       .text(function(d) {return d.company; });
+
+      fast.append("text")
+      .attr("class", "fast-num")
+      .attr("x", function (d) { return xFastScale(d.year_uni) + 30; })
+      .attr("y", function (d, i) { return i * 60 + 25; })
+      .attr("font-size", "1.3em")
+      .attr("text-anchor", "start")
+      .attr("fill", "#3f3f3f")
+      .attr("opacity", 0)
+      .text(function (d) { return d.year_uni + " years"; });
     });
 
   /*------------------------------------------------------------------*/
@@ -464,7 +474,7 @@ var scrollVis = function() {
 
     indBar.append("rect")
     .attr("class", "bar")
-    .attr("x", 10)
+    .attr("x", 20)
     .attr("y", function (d) { return yIndScale(d.key); })
     .attr("width", 0)
     .attr("height", yIndScale.rangeBand())
@@ -473,18 +483,32 @@ var scrollVis = function() {
     indBar.append("text")
     .attr("class", "bar-text")
     .attr("x", function (d) {
-      if (xIndScale(d.values.length) > 240) {
-        return xIndScale(d.values.length) - 200;
-      }
-      return xIndScale(d.values.length) + 20;
+      return xIndScale(d.values.length);
+      
+      // if (xIndScale(d.values.length) > 240) {
+      //   return xIndScale(d.values.length);
+      // }
+      // return xIndScale(d.values.length) + 30;
     })
     .attr("y", function (d) { return yIndScale(d.key); })
+    .attr("dx", function (d) {
+      if (xIndScale(d.values.length) > 240) {
+        return "0";
+      }
+      return "2em";
+    })
     .attr("dy", "1.8em")
     .attr("fill", function (d) {
       if (xIndScale(d.values.length) > 240) {
         return "#fff";
       }
       return "#3f3f3f";
+    })
+    .attr("text-anchor", function (d) {
+      if (xIndScale(d.values.length) > 240) {
+        return "end";
+      }
+      return "start";
     })
     .text(function (d) { return d.key; });
 
@@ -513,7 +537,7 @@ var scrollVis = function() {
     activateFunctions[5] = showFast;
     activateFunctions[6] = showFastColor;
     activateFunctions[7] = showBar;
-    // activateFunctions[8] = showHistAll;
+    activateFunctions[8] = hideAll;
 
     // updateFunctions are called while
     // in a particular section to update
@@ -625,6 +649,11 @@ var scrollVis = function() {
     .duration(600)
     .attr("opacity", 0);
 
+    g.selectAll(".fast-num")
+    .transition()
+    .duration(600)
+    .attr("opacity", 0);
+
   }
 
   /**
@@ -712,6 +741,11 @@ var scrollVis = function() {
     .transition()
     .duration(600)
     .attr("opacity", 0);
+
+    g.selectAll(".fast-num")
+    .transition()
+    .duration(600)
+    .attr("opacity", 0);
   }
 
   function showTree() {
@@ -793,6 +827,11 @@ var scrollVis = function() {
     .transition()
     .duration(600)
     .attr("opacity", 0);
+
+    g.selectAll(".fast-num")
+    .transition()
+    .duration(600)
+    .attr("opacity", 0);
   }
 
   function showTop() {
@@ -861,6 +900,11 @@ var scrollVis = function() {
     .transition()
     .duration(600)
     .attr("opacity", 0);
+
+    g.selectAll(".fast-num")
+    .transition()
+    .duration(600)
+    .attr("opacity", 0);
   }
 
   function showCountryColor() {
@@ -906,6 +950,11 @@ var scrollVis = function() {
     .attr("width", 0);
 
     g.selectAll(".fast-text")
+    .transition()
+    .duration(600)
+    .attr("opacity", 0);
+
+    g.selectAll(".fast-num")
     .transition()
     .duration(600)
     .attr("opacity", 0);
@@ -999,6 +1048,11 @@ var scrollVis = function() {
     .transition()
     .duration(600)
     .attr("opacity", 1);
+
+    g.selectAll(".fast-num")
+    .transition()
+    .duration(600)
+    .attr("opacity", 1);
   }
 
   function showFastColor() {
@@ -1089,6 +1143,11 @@ var scrollVis = function() {
     .transition()
     .duration(600)
     .attr("opacity", 1);
+
+    g.selectAll(".fast-num")
+    .transition()
+    .duration(600)
+    .attr("opacity", .1);
   }
 
   function showBar() {
@@ -1161,8 +1220,7 @@ var scrollVis = function() {
     .duration(600)
     .attr("opacity", 1);
 
-     g.select("#x-label")
-    .attr("dx", ".6em")
+    g.select("#x-label")
     .attr("dy", "3em")
     .transition()
     .duration(600)
@@ -1177,8 +1235,104 @@ var scrollVis = function() {
     .transition()
     .duration(600)
     .attr("opacity", 0);
+
+    g.selectAll(".fast-num")
+    .transition()
+    .duration(600)
+    .attr("opacity", 0);
   }
 
+  function hideAll() {
+    hideAxis();
+    
+    g.selectAll(".count-title")
+    .transition()
+    .duration(600)
+    .attr("opacity", 0);
+
+    g.selectAll(".value-title")
+    .transition()
+    .duration(600)
+    .attr("opacity", 0);
+
+    g.selectAll(".value-sub")
+    .transition()
+    .duration(600)
+    .attr("opacity", 0);
+
+    g.selectAll(".top")
+    .transition()
+    .duration(600)
+    .attr('width', 0);
+
+    g.selectAll(".tree")
+    .transition()
+    .duration(600)
+    .attr("width", 0)
+    .attr("height", 0);
+
+    g.selectAll(".tree-text")
+    .transition()
+    .duration(600)
+    .attr("opacity", 0);
+
+    g.selectAll(".tree-num")
+    .transition()
+    .duration(600)
+    .attr("opacity", 0);
+
+    g.selectAll(".top")
+    .transition()
+    .duration(600)
+    .attr("r", 0);
+
+    g.selectAll(".top-text")
+    .transition()
+    .duration(600)
+    .attr("opacity", 0);
+
+    g.selectAll(".legend")
+    .transition()
+    .duration(600)
+    .attr("width", 0)
+    .attr("height", 0);
+
+    g.selectAll(".legend-text")
+    .transition()
+    .duration(600)
+    .attr("opacity", 0);
+
+    g.selectAll(".bar")
+    .transition()
+    .duration(600)
+    .attr("width", 0);
+
+    g.selectAll(".bar-text")
+    .transition()
+    .duration(600)
+    .attr("opacity", 0);
+
+    g.select("#x-label")
+    .attr("dy", "3em")
+    .transition()
+    .duration(600)
+    .text("Number of companies");
+
+    g.selectAll(".fast")
+    .transition()
+    .duration(600)
+    .attr("width", 0);
+
+    g.selectAll(".fast-text")
+    .transition()
+    .duration(600)
+    .attr("opacity", 0);
+
+    g.selectAll(".fast-num")
+    .transition()
+    .duration(600)
+    .attr("opacity", 0);
+  }
   
   function showAxis(axis) {
     g.select(".x.axis")

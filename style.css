@@ -4,9 +4,9 @@ body {
 }
 
 h1 {
-  margin: 0.4em auto;
   position: fixed;
   color: #545454;
+  left: 30vw;
 }
 
 #graphic {
@@ -52,7 +52,7 @@ h1 {
   position: fixed;
   top: 60px;
   z-index: 1;
-  margin: 2em 0 2em 8em;
+  margin: 2em 0 2em 6em;
   width: 50%;
 }
 
@@ -124,4 +124,132 @@ rect#United-States{
   fill: #002868;
   fill-opacity: .7;
   opacity: .1;
+}
+
+@media screen and (max-width: 992px) {
+  #vis {
+    margin-left: 2em;
+    width: 55%;
+  }
+
+  h1 {
+    left: 20vw;
+  }
+
+  #sections {
+    display: block;
+    padding-top: 190px;
+    padding-bottom: 100px;
+    margin: 0 auto;
+  }
+
+  #sections .title {
+    font-size: 1em;
+  }
+
+  .step p {
+    font-size: 1em;
+  }
+}
+
+@media screen and (max-width: 768px) {
+  #vis {
+    width: 80%;
+    margin-left: 1em;
+    top: 30px;
+  }
+
+  #sections {
+    display: block;
+    margin: 0 auto;
+    padding-bottom: 50px;
+    padding-top: 200px;
+  }
+
+  #sections .title {
+    font-size: 1em;
+  }
+
+  .step p {
+    font-size: 1em;
+  }
+
+  h1 {
+    font-size: 2em;
+    text-align: center;
+    left: 20vw;
+  }
+}
+
+@media screen and (max-width: 640px) {
+  #vis {
+    width: 80%;
+    margin-left: 1em;
+  }
+
+  #sections {
+    display: block;
+  }
+
+  #sections .title {
+    font-size: 1em;
+  }
+
+  .step p {
+    font-size: 1em;
+  }
+
+  h1 {
+    left: 20vw;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  #vis {
+    width: 100%;
+    /*margin-left: 1em;*/
+  }
+
+  #sections {
+    display: block;
+    padding-top: 100px;
+    padding-bottom: 150px;
+  }
+
+  #sections .title {
+    font-size: 1em;
+  }
+
+  .step p {
+    font-size: 1em;
+  }
+
+  h1 {
+    left: 0;
+  }
+
+  @media screen and (min-width: 320px) and (max-width: 479px) {
+  #vis {
+    width: 80%;
+    margin-left: 1em;
+  }
+
+  #sections {
+    display: block;
+    padding-top: 100px;
+  }
+
+  #sections .title {
+    font-size: 1em;
+  }
+
+  .step p {
+    font-size: 1em;
+  }
+
+  h1 {
+    left: 5vw;
+    margin: .4em;
+    font-size: 1.8em;  
+  }
 }
